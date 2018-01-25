@@ -1,33 +1,37 @@
+require 'uri'
 require 'date'
 require 'json'
+require 'openssl'
 require 'net/http'
 
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
 	def market_history(currency, aggregation)
-	  uri = URI.parse('http://api2.orionx.io/graphql')
+	  uri = URI.parse('https://api2.orionx.io/graphql')
 
 		http = Net::HTTP.new(uri.host, uri.port)
 
 		request = Net::HTTP::Post.new(uri.path)
 
+		http.use_ssl = true
+
 		query_str = '
-		  query getMarketStats($marketCode: ID!, $aggregation: MarketStatsAggregation!) {
-		    marketStats(marketCode: $marketCode, aggregation: $aggregation) {
-		      _id
-		      open
-		      close
-		      high
-		      low
-		      volume
-		      count
-		      fromDate
-		      toDate
-		      __typename
-		    }
-		  }
-		  '
+			query getMarketStats($marketCode: ID!, $aggregation: MarketStatsAggregation!) {
+				marketStats(marketCode: $marketCode, aggregation: $aggregation) {
+					_id
+					open
+					close
+					high
+					low
+					volume
+					count
+					fromDate
+					toDate
+					__typename
+				}
+			}
+		'
 
 		variables = {
 		  'marketCode': "#{currency}",
@@ -36,27 +40,31 @@ class ApplicationController < ActionController::Base
 		}
 
 		query = {
-		'query': query_str,
-		'variables': variables
+			'query': query_str,
+
+			'variables': variables
 		}
 
 		request.body = query.to_json
 
-		time_stamp = DateTime.now.strftime('%s')
+		request.body.gsub!(/\\t/, "")
 
 		digest = OpenSSL::Digest.new('sha512')
 
+		time_stamp = (DateTime.now.strftime('%Q').to_f / 1000).round(2)
+
+		secret_key = "QzFnLfkgGao7iKsReGHhGGfTuNBH6e5f3n"
+
+		hmac = OpenSSL::HMAC.hexdigest(digest, secret_key, time_stamp.to_s + request.body.gsub(/\\t/, ""))
+
 		request['Content-Type'] = 'application/json'
 		request['X-ORIONX-TIMESTAMP'] = time_stamp
-		request['X-ORIONX-APIKEY'] = ENV['ORIONX_API_KEY']
+		request['X-ORIONX-APIKEY'] = "GXYiMaZXNYDceaykZskqLCDsXiYLp5MDxE"
+		request['X-ORIONX-SIGNATURE'] = hmac
 
-		hmac = OpenSSL::HMAC.new(ENV['ORIONX_SECRET_KEY'], OpenSSL::Digest.new('sha512'))
-		hmac.update(time_stamp + request.body)
+		response = http.request(request)
 
-		request['X-ORIONX-SIGNATURE'] = 
-		request['Content-Length'] = request.body.length
-
-		return JSON.parse(http.request(request).body)
+		return JSON.parse(response.body)
 	end
 
 	def chart_data(response)
@@ -68,7 +76,6 @@ class ApplicationController < ActionController::Base
 			date = Time.at(record['fromDate'] * 0.001).strftime('%FT%T')
 
 			if !record['close'] and index != 0
-				puts index
 				close_price = chart.last[1]
 			else
 				close_price = record['close']
