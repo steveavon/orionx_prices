@@ -17,13 +17,20 @@ class HomeController < ApplicationController
 	  		@aggregation = 'h1'
 	  	end
 
+	  	if params[:sma_periods]
+	  		@sma_periods = params[:sma_periods]
+	  	else
+	  		@sma_periods = 3
+	  	end
+
 	  	response = market_history(@currency, @aggregation)
 
-	  	@chart, @min, @max = chart_data(response)
+	  	@chart, min, max = chart_data(response)
 
-	  	@sma_3, @min, @max = sma(response, 3)
+	  	@sma, min_sma, max_sma = sma(response, @sma_periods.to_i)
 
-	  	@sma_10, @min, @max = sma(response, 10)
+	  	@min = [min, min_sma].min
+	  	@max = [max, max_sma].max
 	  rescue Exception => e
 	    logger.info('Error: ' + e.message)
 
