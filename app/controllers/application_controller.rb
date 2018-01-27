@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
 
 		request.body = query.to_json
 
-		request.body.gsub!(/\\t/, "")
+		request.body.gsub!(/\\t/, '')
 
 		digest = OpenSSL::Digest.new('sha512')
 
@@ -55,7 +55,7 @@ class ApplicationController < ActionController::Base
 
 		secret_key = "QzFnLfkgGao7iKsReGHhGGfTuNBH6e5f3n"
 
-		hmac = OpenSSL::HMAC.hexdigest(digest, secret_key, time_stamp.to_s + request.body.gsub(/\\t/, ""))
+		hmac = OpenSSL::HMAC.hexdigest(digest, secret_key, time_stamp.to_s + request.body.gsub(/\\t/, ''))
 
 		request['Content-Type'] = 'application/json'
 		request['X-ORIONX-TIMESTAMP'] = time_stamp
@@ -139,5 +139,56 @@ class ApplicationController < ActionController::Base
 		chart_max = max + (max - min) * 0.2
 
 		return chart, chart_min, chart_max
+	end
+
+	def rsi(response)
+		chart = []
+
+		data = response['data']['marketStats']
+
+		data.each_with_index { |record, index|
+			date = Time.at(record['fromDate'] * 0.001).strftime('%FT%T')
+
+			if !record['close'] and index != 0
+				close_price = chart.last[1]
+			else
+				close_price = record['close']
+			end
+
+			chart.push([date, close_price])
+		}
+
+		values = chart.map { |row| row[1] }.compact
+
+		up = []
+
+		down = []
+
+		(0..values.length - 2).each do |i|
+			chg = values[i + 1] - values[i]
+
+			if (chg > 0)
+				up.push(chg)
+				down.push(0)
+			elsif (chg < 0)
+				down.push(-chg)
+				up.push(0)
+			else
+				up.push(0)
+				down.push(0)
+			end
+		end
+
+		tmp_up = up.last(14)
+		tmp_down = down.last(14)
+
+		avgU = tmp_up.inject{ |sum, el| sum + el }.to_f / tmp_up.size
+		avgD = tmp_down.inject{ |sum, el| sum + el }.to_f / tmp_down.size
+
+		rs = avgU / avgD
+
+		rsi = 100 - 100 / (1 + rs)
+
+		return rsi
 	end
 end

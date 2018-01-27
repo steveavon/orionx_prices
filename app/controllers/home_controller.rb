@@ -25,12 +25,17 @@ class HomeController < ApplicationController
 
 	  	response = market_history(@currency, @aggregation)
 
+	  	@rsi = rsi(response)
+
 	  	@chart, min, max = chart_data(response)
 
 	  	@sma, min_sma, max_sma = sma(response, @sma_periods.to_i)
 
-	  	@min = [min, min_sma].min
-	  	@max = [max, max_sma].max
+	  	tmp_min = [min, min_sma].min
+	  	tmp_max = [max, max_sma].max
+
+	  	@min = tmp_min - tmp_min * 0.005
+	  	@max = tmp_max + tmp_max * 0.005
 	  rescue Exception => e
 	    logger.info('Error: ' + e.message)
 
