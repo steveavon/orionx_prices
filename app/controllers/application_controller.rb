@@ -81,7 +81,7 @@ class ApplicationController < ActionController::Base
 				volume = vol.last[1]
 				close_price = price.last[1]
 			else
-				volume = record['volume'] * 0.00000001
+				volume = (record['volume'] * 0.00000001).round(1)
 				close_price = record['close']
 			end
 
