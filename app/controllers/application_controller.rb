@@ -67,6 +67,45 @@ class ApplicationController < ActionController::Base
 		return JSON.parse(response.body)
 	end
 
+	def vol_chart(response)
+		vol = []
+		obv = []
+		price = []
+
+		data = response['data']['marketStats']
+
+		data.each_with_index { |record, index|
+			date = Time.at(record['fromDate'] * 0.001).strftime('%FT%T')
+
+			if !record['close'] and index != 0
+				volume = vol.last[1]
+				close_price = price.last[1]
+			else
+				volume = record['volume'] * 0.00000001
+				close_price = record['close']
+			end
+
+			vol.push([date, volume])
+			price.push([date, close_price])
+		}
+
+		obv.push(vol.first)
+
+		(1..vol.length - 1).each { |i|
+			chg = price[i][1] - price[i-1][1]
+
+			if chg > 0
+				obv.push([price[i][0], obv.last[1] + vol[i][1]])
+			elsif chg < 0
+				obv.push([price[i][0], obv.last[1] - vol[i][1]])
+			else
+				obv.push([price[i][0], obv.last[1]])
+			end
+		}
+
+		return obv
+	end
+
 	def chart_data(response)
 		chart = []
 

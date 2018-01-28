@@ -1,8 +1,14 @@
-<h1 align='center'><%= @currency %> (<%= @aggregation %>) Historic prices from Orionx</h1>
+<h1 align='center'><%= @currency %> (<%= @aggregation.capitalize %>) Historic prices from Orionx</h1>
 
-<%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], min: @min, max: @max, width: '100%', height: '500px' %>
+<br />
+<br />
+<br />
 
-<p align='center'><strong>RSI del ultimo periodo</strong>: <%= @rsi.round(1) %></p>
+<p align='center'><strong>RSI del último periodo</strong>: <%= @rsi.round(1) %></p>
+
+<%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'Precio de cierre y media móvil', min: @min, max: @max, width: '100%', height: '350px' %>
+
+<%= column_chart @vol, ytitle: 'OBV (On Balance Volume)', width: '100%', height: '350px', library: { hAxis: { textPosition: 'none'  } } %>
 
 <br />
 

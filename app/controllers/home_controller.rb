@@ -27,6 +27,8 @@ class HomeController < ApplicationController
 
 	  	@rsi = rsi(response)
 
+	  	@vol = vol_chart(response)
+
 	  	@chart, min, max = chart_data(response)
 
 	  	@sma, min_sma, max_sma = sma(response, @sma_periods.to_i)
