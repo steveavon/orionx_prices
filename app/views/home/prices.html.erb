@@ -28,5 +28,7 @@
 			<label for="usr">Compare with</label>
 			<%= select_tag 'sma_periods', options_for_select({'SMA 3 Periods': '3', 'SMA 8 Periods': '8', 'SMA 15 Periods': '15'}, @sma_periods), class: 'form-control' %>
 		</div>
+
+		<br />
 	<%= submit_tag 'Go',  class: 'btn btn-primary mb-2' %>
 </div>
