@@ -185,7 +185,11 @@ class ApplicationController < ActionController::Base
 
 		rs = avgU / avgD
 
-		rsi = 100 - 100 / (1 + rs)
+		if (100 - 100 / (1 + rs)).to_f.nan? 
+			rsi = 50
+		else
+			rsi = 100 - 100 / (1 + rs)
+		end
 
 		return rsi
 	end

@@ -22,21 +22,29 @@ class HomeController < ApplicationController
 	  	@sma_periods = 3
 	  end
 
+		if params[:currency] == 'CHACLP'
+			@cha = true
+		else
+			@cha = false
+		end
+
 	  price, vol = market_history(@currency, @aggregation)
 
 	  @rsi = rsi(price)
 
-	  @vol = vol_chart(price, vol)
+	  if (price.length > 0) and (vol.length > 0)
+		  @vol = vol_chart(price, vol)
 
-	  @chart, min, max = chart_data(price)
+		  @chart, min, max = chart_data(price)
 
-	  @sma, min_sma, max_sma = sma(price, @sma_periods.to_i)
+		  @sma, min_sma, max_sma = sma(price, @sma_periods.to_i)
 
-	  tmp_min = [min, min_sma].min
-	  tmp_max = [max, max_sma].max
+		  tmp_min = [min, min_sma].min
+		  tmp_max = [max, max_sma].max
 
-	  @min = tmp_min - tmp_min * 0.005
-	  @max = tmp_max + tmp_max * 0.005
+		  @min = tmp_min - tmp_min * 0.005
+		  @max = tmp_max + tmp_max * 0.005
+		end
 	end
 end
 
