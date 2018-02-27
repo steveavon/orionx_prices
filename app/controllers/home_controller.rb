@@ -22,12 +22,6 @@ class HomeController < ApplicationController
 	  	@sma_periods = 3
 	  end
 
-		if params[:currency] == 'CHACLP'
-			@cha = true
-		else
-			@cha = false
-		end
-
 	  price, vol = market_history(@currency, @aggregation)
 
 	  @rsi = rsi(price)
@@ -45,6 +39,9 @@ class HomeController < ApplicationController
 		  @min = tmp_min - tmp_min * 0.005
 		  @max = tmp_max + tmp_max * 0.005
 		end
+	end
+	
+	def app
 	end
 end
 
