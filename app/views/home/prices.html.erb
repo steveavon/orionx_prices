@@ -24,7 +24,7 @@
 	<%= form_tag({:controller => 'home', :action => 'prices'}, :method => 'get') %>
 		<div class="form-group">
 			<label for="usr">Currencies</label>
-			<%= select_tag 'currency', options_for_select({'BTC/CLP': 'BTCCLP', 'ETH/CLP': 'ETHCLP', 'XRP/CLP': 'XRPCLP', 'LTC/CLP': 'LTCCLP', 'CHA/CLP': 'CHACLP', 'BCH/CLP': 'BCHCLP', 'DASH/CLP': 'DASHCLP'}, @currency), class: 'form-control' %>
+			<%= select_tag 'currency', options_for_select({'BTC/CLP': 'BTCCLP', 'ETH/CLP': 'ETHCLP', 'XRP/CLP': 'XRPCLP', 'LTC/CLP': 'LTCCLP', 'CHA/CLP': 'CHACLP', 'LUK/CLP': 'LUKCLP', 'BCH/CLP': 'BCHCLP', 'DASH/CLP': 'DASHCLP'}, @currency), class: 'form-control' %>
 		</div>
 
 		<div class="form-group">
