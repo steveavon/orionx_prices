@@ -17,23 +17,22 @@
 		<ul>
 			<li>Visualizas los últimos precios de los mercados en Orionx.</li>
 			<li>Alarma en caso de que la última transacción suceda fuera del rango especificado.</li>
-			<li>Se refresca cada 15 segundos.</li>
+			<li>Se refresca cada 10 segundos.</li>
 		</ul>
 
 		<br />
 
 		<h3 align='center'>Change log</h3> 
 
-		<p align='center'>(Última version 1.1.4 - 6 de Marzo del 2018)</p>
+		<p align='center'>(Última version 1.1.4 - 12 de Abril del 2018)</p>
 
 		<br />
 
+		En resumen:
+
 		<ul>
-			<li>Se arreglo un bug que hacia que las graficas mostraran datos antiguos despues de tener mucho tiempo abierto la aplicacion y pasar el mouse por encima de la grafica.</li>
-			<li>Se arreglo un bug, ya que los precios iniciales y finales de la alarma se mezclaban entre los diferentes mercados (los precios de BTC activaba la alarma en CHA, etc.).</li>
-			<li>Se redujo el refresco de cada 30 segundos a cada 15 segundos.</li>
-			<li>Los precios de la grafica que ahora muestra son de cada 5 minutos por los ultimos 55 minutos (no cada 15 minutos como era antes).</li>
-			<li>Se agregaron/mejoraron las notificaciones y se redujo un poco el volumen y duracion de la alarma.</li>
+			<li>Se arreglaron varios bugs respecto a las graficas que hacia que se vieran distorcionadas.</li>
+			<li>Se arreglo un bug respecto a la alarma que hacia que no funcionara correctamente, ya que las alarmas respecto a una criptomoneda colisionaba con las alarmas de otras.</li>
 			<li>Se agrego un boton para esconder las graficas y asi no tener que usar tanto el scroll.</li>
 		</ul>
 
@@ -51,9 +50,9 @@
 	<div class="col-sm-3">
 	</div>
 	<div class="col-sm-4">
-		<%= link_to 'orionx-prices 32bits', '/app/orionx-prices32.zip', style: "margin-left: 50px", class: "btn btn-primary" %>
+		<%= link_to 'Windows 64bits', '/app/orionx-prices64-windows.zip', style: "margin-left: 50px", class: "btn btn-primary" %>
 	</div>
 	<div class="col-sm-4">
-		<%= link_to 'orionx-prices 64bits', '/app/orionx-prices64.zip', class: "btn btn-primary" %>
+		<%= link_to 'Linux 64bits', '/app/orionx-prices64-linux.zip', class: "btn btn-primary" %>
 	</div>
 </div>
