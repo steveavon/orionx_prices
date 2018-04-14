@@ -8,12 +8,30 @@
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'https://www.google.com/jsapi', 'chartkick' %>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <!-- JQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+
+    <!-- Bootstrap CSS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/css/bootstrap-select.min.css">
   </head>
 
   <body>
-    <br />
+    <nav class="navbar navbar-default">
+      <div class="navbar-header">
+        <%= link_to 'Otros sitios', nil, class: 'navbar-brand' %>
+      </div>
+      <div id="navbar">
+        <ul class="nav navbar-nav">
+          <li><%= link_to 'Local Chile Crypto', 'https://local-chile-crypto.herokuapp.com/', target: :_blank %></li>
+          <li><%= link_to 'Orionx Prices Desktop', home_app_path, target: :_blank %></li>
+        </ul>
+      </div>
+    </nav>
       
     <%= yield %>
     <%= yield :charts_js %>
