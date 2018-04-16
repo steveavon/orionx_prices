@@ -8,17 +8,17 @@
 
 <p align='center'><strong>RSI del último periodo</strong>: <%= @rsi.round(1) %></p>
 
-<%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'Precio de cierre y media móvil', min: @min, max: @max, width: '100%', height: '350px' %>
+<%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'Satoshis', min: @min, max: @max, width: '100%', height: '350px' %>
 
 <%= column_chart @vol, ytitle: 'OBV (On Balance Volume)', width: '100%', height: '350px', library: { hAxis: { textPosition: 'none'  } } %>
 
 <br />
 
-<div class='col-md-2 offset-md-5 text-center'>
+<div class='col-xs-2 col-xs-offset-5 text-center'>
 	<%= form_tag({:controller => 'home', :action => 'prices'}, :method => 'get') %>
 		<div class="form-group">
 			<label for="usr">Currencies</label>
-			<%= select_tag 'currency', options_for_select({'BTC/CLP': 'BTCCLP', 'ETH/CLP': 'ETHCLP', 'XRP/CLP': 'XRPCLP', 'LTC/CLP': 'LTCCLP', 'CHA/CLP': 'CHACLP', 'LUK/CLP': 'LUKCLP', 'BCH/CLP': 'BCHCLP', 'DASH/CLP': 'DASHCLP'}, @currency), class: 'form-control' %>
+			<%= select_tag 'currency', options_for_select({'ETH/BTC': 'ETHBTC', 'XRP/BTC': 'XRPBTC', 'LTC/BTC': 'LTCBTC', 'CHA/BTC': 'CHABTC', 'BCH/BTC': 'BCHBTC', 'DASH/BTC': 'DASHBTC'}, @currency), class: 'form-control' %>
 		</div>
 
 		<div class="form-group">
