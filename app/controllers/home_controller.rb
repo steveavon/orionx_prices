@@ -7,7 +7,7 @@ class HomeController < ApplicationController
 	  if params[:currency]
 	  	@currency = params[:currency]
 	  else
-	  	@currency = 'BTCCLP'
+	  	@currency = 'ETHBTC'
 	  end
 
 	  if params[:aggregation]
