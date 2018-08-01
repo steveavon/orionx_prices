@@ -8,7 +8,7 @@
 
 <p align='center'><strong>RSI del último periodo</strong>: <%= @rsi.round(1) %></p>
 
-<%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'Satoshis', min: @min, max: @max, width: '100%', height: '350px' %>
+<%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'CLP', min: @min, max: @max, width: '100%', height: '350px' %>
 
 <%= column_chart @vol, ytitle: 'OBV (On Balance Volume)', width: '100%', height: '350px', library: { hAxis: { textPosition: 'none'  } } %>
 
