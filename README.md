@@ -1,24 +1,15 @@
-# README
+# Orionx Prices
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Web aplication to see the prices of the [Orionx](https://orionx.com) exchange.
 
-Things you may want to cover:
+## Demo
 
-* Ruby version
+You can see an example of the web application [here](https://orionx-prices.herokuapp.com).
 
-* System dependencies
+## Ruby and Rails versions
 
-* Configuration
+Ruby version used in the development was 2.4.1 and Rails version was 5.1.4.
 
-* Database creation
+## Authors
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* **Patricio Sard**
