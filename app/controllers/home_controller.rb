@@ -1,37 +1,22 @@
-require 'date'
-require 'json'
-require 'net/http'
-
 class HomeController < ApplicationController
+	include OrionxApi
+	include PriceStatistics
+	
 	def prices
-	  if params[:currency]
-	  	@currency = params[:currency]
-	  else
-	  	@currency = 'CHACLP'
-	  end
+		@currency = if params[:currency] then params[:currency] else 'BTCCLP' end
+		@aggregation = if params[:aggregation] then params[:aggregation] else 'h1' end
+		@sma_periods = if params[:sma_periods] then params[:sma_periods] else 3 end
 
-	  if params[:aggregation]
-	  	@aggregation = params[:aggregation]
-	  else
-	  	@aggregation = 'h1'
-	  end
+	  historic_price, historic_vol = market_history(@currency, @aggregation)
 
-	  if params[:sma_periods]
-	  	@sma_periods = params[:sma_periods]
-	  else
-	  	@sma_periods = 3
-	  end
+	  @rsi = rsi(historic_price)
 
-	  price, vol = market_history(@currency, @aggregation)
+	  if (historic_price.length > 0) and (historic_vol.length > 0)
+		  @vol = vol_data_for_chart(historic_price, historic_vol, @sma_periods.to_i)
 
-	  @rsi = rsi(price)
+		  @chart, min, max = chart_data(historic_price, @sma_periods.to_i)
 
-	  if (price.length > 0) and (vol.length > 0)
-		  @vol = vol_chart(price, vol)
-
-		  @chart, min, max = chart_data(price)
-
-		  @sma, min_sma, max_sma = sma(price, @sma_periods.to_i)
+		  @sma, min_sma, max_sma = sma(historic_price, @sma_periods.to_i)
 
 		  tmp_min = [min, min_sma].min
 		  tmp_max = [max, max_sma].max
