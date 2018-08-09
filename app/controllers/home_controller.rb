@@ -13,6 +13,7 @@ class HomeController < ApplicationController
 		usd_internacional_price_tmp = get_crypto_price(@crypto_short_name)
 
 		@usd_internacional_price = case usd_internacional_price_tmp 
+			when nil then  
 			when 0..1 then usd_internacional_price_tmp.round(3)
 			when 1..10 then usd_internacional_price_tmp.round(2)
 			when 10..100 then usd_internacional_price_tmp.round(1)
