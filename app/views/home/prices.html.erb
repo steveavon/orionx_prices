@@ -1,24 +1,28 @@
 <br />
 
-<h2 align='center'>Precios internacionales del <%= @currency.chomp("CLP") %></h2>
+<% if @usd_internacional_price and @usd_in_clp %>
 
-<br />
+	<h2 align='center'><%= @crypto_short_name %> - Precios en los mercados internacionales</h2>
 
-<ul>
-	<li><strong>Valor del <%= @currency.chomp("CLP") %> en USD</strong>: <%= @usd_internacional_price %></li>
-	<li><strong>Valor equivalente en CLP</strong>: <%= (@usd_in_clp * @usd_internacional_price).to_i %></li>
-</ul>
+	<br />
 
-<p align='center'><small>Tanto el precio del <%= @currency.chomp("CLP") %> como el del dolar se actualizan cada 5 minutos.</small></p>
+	<ul>
+		<li><strong>Valor del <%= @crypto_short_name %> en USD</strong>: <%= number_with_delimiter(@usd_internacional_price, delimiter: '.', separator: ",") %> USD</li>
+		<li><strong>Valor del dolar en CLP</strong>: <%= number_with_delimiter(@usd_in_clp, delimiter: '.') %> CLP</li>
+		<li><strong>Valor del <%= @crypto_short_name %> en CLP</strong>: <%= number_with_delimiter((@usd_in_clp * @usd_internacional_price).round(0), delimiter: '.') %> CLP</li>
+	</ul>
 
-<br />
+	<p align='center'><small>Precios actualizaos cada 15 minutos.</small></p>
 
-<h2 align='center'>Precio historico del <%= @currency.chomp("CLP") %> en Orionx</h2>
+	<br />
+
+<% end %>
+
+<h2 align='center'><%= @crypto_short_name %> - Indicadores en Orionx</h2>
 
 <%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'CLP', min: @min, max: @max, width: '100%', height: '350px' %>
 
-<h2 align='center'>Indicadores del <%= @currency.chomp("CLP") %> en Orionx</h2>
-
+<br />
 <br />
 
 <p align='center'><strong>RSI del último periodo</strong>: <%= @rsi.round(1) %></p>
@@ -31,7 +35,7 @@
 	<%= form_tag({:controller => 'home', :action => 'prices'}, :method => 'get') %>
 		<div class="form-group">
 			<label for="usr">Currencies</label>
-			<%= select_tag 'currency', options_for_select({'BTC/CLP': 'BTCCLP', 'ETH/CLP': 'ETHCLP', 'XRP/CLP': 'XRPCLP', 'LTC/CLP': 'LTCCLP', 'CHA/CLP': 'CHACLP', 'LUK/CLP': 'LUKCLP', 'BCH/CLP': 'BCHCLP', 'DASH/CLP': 'DASHCLP', }, @currency), class: 'form-control' %>
+			<%= select_tag 'currency', options_for_select({'BTC/CLP': 'BTCCLP', 'ETH/CLP': 'ETHCLP', 'XRP/CLP': 'XRPCLP', 'XLM/CLP': 'XLMCLP', 'LTC/CLP': 'LTCCLP', 'CHA/CLP': 'CHACLP', 'LUK/CLP': 'LUKCLP', 'BCH/CLP': 'BCHCLP', 'DASH/CLP': 'DASHCLP'}, @currency), class: 'form-control' %>
 		</div>
 
 		<div class="form-group">

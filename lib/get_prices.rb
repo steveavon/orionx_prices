@@ -1,28 +1,28 @@
 require 'httparty'
 
+include Functionalities
+
 module GetPrices
 	def get_crypto_price(crypto)
 		crypto_price = nil
 
-		valor = (crypto == 'BTC')
+		if (['BTC', 'ETH', 'XRP', 'XLM', 'LTC', 'BCH', 'DASH'].include?(crypto))
+			file_name = File.join(Dir.pwd, "/prices/", crypto.downcase)
 
-		if crypto == 'BTC'
-			file_name = Dir.pwd + "/prices/" + crypto.downcase
+			if (!File.exist?(file_name) or minutes_since_modification_of_file(file_name) > 15)
+				crypto_id = get_crypto_id(crypto)
 
-			if !File.exist?(file_name) or ((File.mtime(file_name) - Time.now) / 60).to_i.abs > 15
-				puts "consultando API precio btc"
-				response = HTTParty.get("https://api.coingecko.com/api/v3/coins/bitcoin?localization=false")
+				if (crypto_id)
+				response = HTTParty.get("https://api.coingecko.com/api/v3/coins/#{crypto_id}?localization=false")
 
-				crypto_price = JSON.parse(response.body)["market_data"]["current_price"]["usd"]
+					if (response.code == 200)
+						crypto_price = JSON.parse(response.body)["market_data"]["current_price"]["usd"]
 
-				File.open(file_name, 'w') { |file|
-					file.write(crypto_price)
-				}
+						File.open(file_name, 'w') { |file| file.write(crypto_price) }
+					end
+				end
 			else
-				puts "consultando archivo precio btc"
-				crypto_price = File.open(file_name) { |f|
-					f.readline
-				}.to_i
+				crypto_price = File.open(file_name) { |f| f.readline }.to_f
 			end
 		end
 
@@ -32,23 +32,19 @@ module GetPrices
 	def get_usd_in_clp(crypto)
 		usd_in_clp = nil
 
-		if crypto == 'BTC'
-			file_name = Dir.pwd + "/prices/clp"
+		if (['BTC', 'ETH', 'XRP', 'XLM', 'LTC', 'BCH', 'DASH'].include?(crypto))
+			file_name = File.join(Dir.pwd, "/prices/clp")
 
-			if !File.exist?(file_name) or ((File.mtime(file_name) - Time.now) / 60).to_i.abs > 15
-				puts "consultando API precio usd"
+			if (!File.exist?(file_name) or minutes_since_modification_of_file(file_name) > 15)
 				response = HTTParty.get("https://mindicador.cl/api/dolar")
 
-				usd_in_clp = JSON.parse(response.body)["serie"].first["valor"]
+				if (response.code == 200)
+					usd_in_clp = JSON.parse(response.body)["serie"].first["valor"]
 
-				File.open(file_name, 'w') { |file|
-					file.write(usd_in_clp)
-				}
+					File.open(file_name, 'w') { |file| file.write(usd_in_clp) }
+				end
 			else
-				puts "consultando archivo precio usd"
-				usd_in_clp = File.open(file_name) { |f|
-					f.readline
-				}.to_i
+				usd_in_clp = File.open(file_name) { |f| f.readline }.to_f
 			end
 		end
 
