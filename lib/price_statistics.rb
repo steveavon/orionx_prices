@@ -16,8 +16,6 @@ module PriceStatistics
 			end
 		}
 
-		print(obv)
-
 		return obv.drop(sma_periods)
 	end
 
@@ -29,8 +27,6 @@ module PriceStatistics
 
 		price_min = min - (max - min) * 0.2
 		price_max = max + (max - min) * 0.2
-
-		print(price)
 
 		return price.drop(sma_periods), price_min, price_max
 	end

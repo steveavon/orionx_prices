@@ -1,14 +1,27 @@
 <br />
 
-<h1 align='center'><%= @currency %> (<%= @aggregation.capitalize %>) Historic prices from Orionx</h1>
+<h2 align='center'>Precios internacionales del <%= @currency.chomp("CLP") %></h2>
 
 <br />
+
+<ul>
+	<li><strong>Valor del <%= @currency.chomp("CLP") %> en USD</strong>: <%= @usd_internacional_price %></li>
+	<li><strong>Valor equivalente en CLP</strong>: <%= (@usd_in_clp * @usd_internacional_price).to_i %></li>
+</ul>
+
+<p align='center'><small>Tanto el precio del <%= @currency.chomp("CLP") %> como el del dolar se actualizan cada 5 minutos.</small></p>
+
 <br />
+
+<h2 align='center'>Precio historico del <%= @currency.chomp("CLP") %> en Orionx</h2>
+
+<%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'CLP', min: @min, max: @max, width: '100%', height: '350px' %>
+
+<h2 align='center'>Indicadores del <%= @currency.chomp("CLP") %> en Orionx</h2>
+
 <br />
 
 <p align='center'><strong>RSI del último periodo</strong>: <%= @rsi.round(1) %></p>
-
-<%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'CLP', min: @min, max: @max, width: '100%', height: '350px' %>
 
 <%= column_chart @vol, ytitle: 'OBV (On Balance Volume)', width: '100%', height: '350px', library: { hAxis: { textPosition: 'none'  } } %>
 

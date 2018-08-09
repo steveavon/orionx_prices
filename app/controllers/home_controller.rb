@@ -1,11 +1,15 @@
 class HomeController < ApplicationController
 	include OrionxApi
 	include PriceStatistics
+	include GetPrices
 	
 	def prices
 		@currency = if params[:currency] then params[:currency] else 'BTCCLP' end
 		@aggregation = if params[:aggregation] then params[:aggregation] else 'h1' end
 		@sma_periods = if params[:sma_periods] then params[:sma_periods] else 3 end
+
+		@usd_internacional_price = get_crypto_price(@currency.chomp("CLP"))
+		@usd_in_clp = get_usd_in_clp(@currency.chomp("CLP"))
 
 	  historic_price, historic_vol = market_history(@currency, @aggregation)
 
@@ -29,8 +33,3 @@ class HomeController < ApplicationController
 	def app
 	end
 end
-
-
-
-
-
