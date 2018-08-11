@@ -51,13 +51,13 @@ module OrionxApi
 
 		time_stamp = (DateTime.now.strftime('%Q').to_f / 1000)
 
-		secret_key = "QzFnLfkgGao7iKsReGHhGGfTuNBH6e5f3n"
+		secret_key = ENV["ORIONX_SECRET_KEY"]
 
 		hmac = OpenSSL::HMAC.hexdigest(digest, secret_key, time_stamp.to_s + request.body.gsub(/\\t/, ''))
 
 		request['Content-Type'] = 'application/json'
 		request['X-ORIONX-TIMESTAMP'] = time_stamp
-		request['X-ORIONX-APIKEY'] = "GXYiMaZXNYDceaykZskqLCDsXiYLp5MDxE"
+		request['X-ORIONX-APIKEY'] = ENV["ORIONX_API_KEY"]
 		request['X-ORIONX-SIGNATURE'] = hmac
 
 		response = http.request(request)
