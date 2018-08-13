@@ -1,15 +1,15 @@
 module PriceStatistics
-	def vol_data_for_chart(price, vol, sma_periods)
+	def self.get_on_balance_volume(price, vol, sma_periods)
 		obv = []
 
 		obv.push([vol[0][0], vol[0][1].round(1)])
 
 		(1..vol.length - 1).each { |i|
-			chg = price[i][1] - price[i - 1][1]
+			change = price[i][1] - price[i - 1][1]
 
-			if chg > 0
+			if change > 0
 				obv.push([price[i][0], (obv.last[1] + vol[i][1]).round(1)])
-			elsif chg < 0
+			elsif change < 0
 				obv.push([price[i][0], (obv.last[1] - vol[i][1]).round(1)])
 			else
 				obv.push([price[i][0], (obv.last[1]).round(1)])
@@ -19,19 +19,16 @@ module PriceStatistics
 		return obv.drop(sma_periods)
 	end
 
-	def chart_data(price, sma_periods)
+	def self.chart_data(price, sma_periods)
 		values = price.map { |row| row[1] }
 
-		min = values.min
-		max = values.max
+		min = values.min * (1 - 0.02)
+		max = values.max * (1 + 0.02)
 
-		price_min = min - (max - min) * 0.2
-		price_max = max + (max - min) * 0.2
-
-		return price.drop(sma_periods), price_min, price_max
+		return price.drop(sma_periods), min, max
 	end
 
-	def sma(price, step)
+	def self.sma(price, step)
 		values = price.map { |row| row[1] }
 
 		sma = []
@@ -48,51 +45,50 @@ module PriceStatistics
 			end
 		}
 
-		min = values.min
-		max = values.max
-
-		price_min = min - (max - min) * 0.2
-		price_max = max + (max - min) * 0.2
-
-		return sma, price_min, price_max
+		return sma
 	end
 
-	def rsi(price)
+	def self.rsi(price)
 		values = price.map { |row| row[1] }
 
-		up = []
+		gain = []
+		loss = []
 
-		down = []
+		values.each_with_index do |value, i|
+	  	if i != values.size - 1
+				change = values[i + 1] - values[i]
 
-		(0..values.length - 2).each do |i|
-			chg = values[i + 1] - values[i]
-
-			if (chg > 0)
-				up.push(chg)
-				down.push(0)
-			elsif (chg < 0)
-				down.push(-chg)
-				up.push(0)
-			else
-				up.push(0)
-				down.push(0)
-			end
+				if (change > 0)
+					gain.push(change)
+					loss.push(0)
+				elsif (change < 0)
+					loss.push(-change)
+					gain.push(0)
+				else
+					gain.push(0)
+					loss.push(0)
+				end
+	  	end
 		end
 
-		tmp_up = up.last(14)
-		tmp_down = down.last(14)
+		avg_gain = []
+		avg_loss = []
 
-		avgU = tmp_up.inject{ |sum, el| sum + el }.to_f / tmp_up.size
-		avgD = tmp_down.inject{ |sum, el| sum + el }.to_f / tmp_down.size
+		avg_gain.push(gain[0, 14].inject{ |sum, el| sum + el }.to_f / gain[0, 14].size)
+		avg_loss.push(loss[0, 14].inject{ |sum, el| sum + el }.to_f / gain[0, 14].size)
 
-		rs = avgU / avgD
-
-		if (100 - 100 / (1 + rs)).to_f.nan? 
-			rsi = 50
-		else
-			rsi = 100 - 100 / (1 + rs)
+		(14 .. gain.size - 1).each_with_index do |i|
+			avg_gain.push((avg_gain.last * 13 + gain[i]) / 14)
 		end
 
-		return rsi
+		(14 .. loss.size - 1).each_with_index do |i|
+			avg_loss.push((avg_loss.last * 13 + loss[i]) / 14)
+		end
+
+		rs = avg_gain.zip(avg_loss).map{ |x, y| x / y }
+
+		rsi = rs.map{ |x| 100 - (100 / (1 + x)) }
+
+		return rsi.last
 	end
 end

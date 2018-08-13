@@ -3,14 +3,14 @@ require 'httparty'
 include Functionalities
 
 module GetPrices
-	def get_crypto_price(crypto)
+	def self.get_crypto_price_in_usd(crypto)
 		crypto_price = nil
 
 		if (['BTC', 'ETH', 'XRP', 'XLM', 'LTC', 'BCH', 'DASH'].include?(crypto))
 			file_name = File.join(Dir.pwd, "/prices/", crypto.downcase)
 
-			if (!File.exist?(file_name) or minutes_since_modification_of_file(file_name) > 15)
-				crypto_id = get_crypto_id(crypto)
+			if (!File.exist?(file_name) or Functionalities.get_minutes_since_modification_of_file(file_name) > 15)
+				crypto_id = Functionalities.get_crypto_id(crypto)
 
 				if (crypto_id)
 				response = HTTParty.get("https://api.coingecko.com/api/v3/coins/#{crypto_id}?localization=false")
@@ -29,13 +29,13 @@ module GetPrices
 		return crypto_price
 	end
 
-	def get_usd_in_clp(crypto)
+	def self.get_usd_value_in_clp(crypto)
 		usd_in_clp = nil
 
 		if (['BTC', 'ETH', 'XRP', 'XLM', 'LTC', 'BCH', 'DASH'].include?(crypto))
 			file_name = File.join(Dir.pwd, "/prices/clp")
 
-			if (!File.exist?(file_name) or minutes_since_modification_of_file(file_name) > 15)
+			if (!File.exist?(file_name) or Functionalities.minutes_since_modification_of_file(file_name) > 15)
 				response = HTTParty.get("https://mindicador.cl/api/dolar")
 
 				if (response.code == 200)

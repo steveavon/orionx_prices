@@ -5,7 +5,7 @@ require 'openssl'
 require 'net/http'
 
 module OrionxApi
-	def market_history(currency, aggregation)
+	def self.market_history(currency, aggregation)
 	  uri = URI.parse('https://api2.orionx.io/graphql')
 
 		http = Net::HTTP.new(uri.host, uri.port)

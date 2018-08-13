@@ -2,19 +2,19 @@
 
 <br />
 
-<% if @usd_internacional_price and @usd_in_clp %>
+<% if @crypto_internacional_usd_price and @usd_value_in_clp %>
 
 	<h2 align='center'><%= @crypto_short_name %> - Precios en los mercados internacionales</h2>
 
 	<br />
 
 	<ul>
-		<li><strong>Valor del <%= @crypto_short_name %> en USD</strong>: <%= number_with_delimiter(@usd_internacional_price, delimiter: '.', separator: ",") %> USD</li>
-		<li><strong>Valor del dolar en CLP</strong>: <%= number_with_delimiter(@usd_in_clp, delimiter: '.') %> CLP</li>
-		<li><strong>Valor del <%= @crypto_short_name %> en CLP</strong>: <%= number_with_delimiter((@usd_in_clp * @usd_internacional_price).round(0), delimiter: '.') %> CLP</li>
+		<li><strong>Valor del <%= @crypto_short_name %> en USD</strong>: <%= number_with_delimiter(@crypto_internacional_usd_price, delimiter: '.', separator: ",") %> USD</li>
+		<li><strong>Valor del dolar en CLP</strong>: <%= number_with_delimiter(@usd_value_in_clp, delimiter: '.') %> CLP</li>
+		<li><strong>Valor del <%= @crypto_short_name %> en CLP</strong>: <%= number_with_delimiter((@usd_value_in_clp * @crypto_internacional_usd_price).round(0), delimiter: '.') %> CLP</li>
 	</ul>
 
-	<p align='center'><small>Precios actualizaos cada 15 minutos.</small></p>
+	<p align='center'><small>Los precios aqui mostrados son actualizaos cada 15 minutos.</small></p>
 
 	<br />
 
@@ -22,14 +22,14 @@
 
 <h2 align='center'><%= @crypto_short_name %> - Indicadores en Orionx</h2>
 
-<%= line_chart [{name: 'Closing price', data: @chart}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'CLP', min: @min, max: @max, width: '100%', height: '350px' %>
+<%= line_chart [{name: 'Closing price', data: @chart_price_data}, {name: "SMA #{@sma_periods}", data: @sma}], ytitle: 'CLP', min: @min, max: @max, width: '100%', height: '350px' %>
 
 <br />
 <br />
 
 <p align='center'><strong>RSI del último periodo</strong>: <%= @rsi.round(1) %></p>
 
-<%= column_chart @vol, ytitle: 'OBV (On Balance Volume)', width: '100%', height: '350px', library: { hAxis: { textPosition: 'none'  } } %>
+<%= column_chart @on_balance_volume, ytitle: 'OBV (On Balance Volume)', width: '100%', height: '350px', library: { hAxis: { textPosition: 'none'  } } %>
 
 <br />
 
