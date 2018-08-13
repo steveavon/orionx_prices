@@ -35,7 +35,7 @@ module GetPrices
 		if (['BTC', 'ETH', 'XRP', 'XLM', 'LTC', 'BCH', 'DASH'].include?(crypto))
 			file_name = File.join(Dir.pwd, "/prices/clp")
 
-			if (!File.exist?(file_name) or Functionalities.minutes_since_modification_of_file(file_name) > 15)
+			if (!File.exist?(file_name) or Functionalities.get_minutes_since_modification_of_file(file_name) > 15)
 				response = HTTParty.get("https://mindicador.cl/api/dolar")
 
 				if (response.code == 200)
