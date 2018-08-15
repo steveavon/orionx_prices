@@ -28,7 +28,4 @@ class HomeController < ApplicationController
 		  @sma = PriceStatistics.sma(historic_price, @sma_periods.to_i)
 		end
 	end
-	
-	def app
-	end
 end
